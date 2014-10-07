@@ -1,0 +1,26 @@
+namespace :undeploy do
+  desc "Uninstall completely the application"
+  task :uninstall do
+    on roles(:app) do |role|
+      info "This command doesn't drop the database. To drop the database please run cap #{fetch(:stage)} db:drop"
+      ask :confirmation, "Are you sure to delete the app? (yes/no)"
+      
+      if fetch(:confirmation) == "yes"
+        # stop unicorn
+        invoke "deploy:stop"
+        
+        # delete symlinks
+        symlinks = fetch(:symlinks)
+        symlinks.each do |symlink|
+          puts "removed #{sub_strings(symlink[:link])}"
+          sudo "rm #{sub_strings(symlink[:link])}"
+        end
+        
+        execute "rm -rf #{fetch(:deploy_to)}"
+        invoke "nginx:restart"
+        info "The app has been totally removed from the server, you can now delete the following lines from sudoers."
+        invoke "before_deploy:sudo_conf"
+      end
+    end
+  end
+end

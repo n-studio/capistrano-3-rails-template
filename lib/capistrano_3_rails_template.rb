@@ -1,0 +1,2 @@
+module Capistrano3RailsTemplate
+end

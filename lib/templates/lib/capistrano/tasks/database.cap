@@ -1,0 +1,93 @@
+before "deploy:updating", "db:backup"
+
+# inspired by http://www.railsfever.com/blogs/automatic-database-backups-with-capistrano-3
+
+namespace :db do
+  desc "Backup the database"
+  task :backup do
+    unless fetch(:first_deploy) == true
+      on roles(:db) do |host|
+        backup_path = "#{fetch(:deploy_to)}/backups"
+        execute :mkdir, "-p #{backup_path}"
+        basename = 'database'
+      
+        filename = "\"#{basename}_#{fetch(:stage)}_\"$DB_NAME\"_#{Time.now.strftime '%Y-%m-%d_%H-%M-%S'}.sql.bz2\""
+        info "We will backup to file: #{backup_path}/#{filename}"
+      
+        execute "source #{current_path}/.rbenv-vars && cd #{current_path} && pg_dump -U $DB_USERNAME $DB_NAME | bzip2 -9 > #{backup_path}/#{filename}"
+          
+        purge_old_backups "#{basename}", "#{backup_path}"
+      end
+    end
+  end
+  
+  desc "Restore database from backup"
+  task :restore do
+    on roles(:db) do |host|
+      backup_path = "#{fetch(:deploy_to)}/backups"
+      execute :mkdir, "-p #{backup_path}"
+      basename = 'database'
+    
+      backups = capture("ls -t #{backup_path}/#{basename}*.sql.bz2").split
+      
+      backups.each_with_index do |backup, index|
+        info "* #{index}: #{backup}"
+      end
+    
+      ask :index, "Select index of database to restore (0)"
+      set :index, "0" if fetch(:index).empty?
+    
+      if !backups.empty? && backups[fetch(:index).to_i]
+        dumpfile = backups[fetch(:index).to_i]
+        invoke "deploy:stop"
+        invoke "db:drop"
+        invoke "db:create"
+        execute "bzip2 -dk #{dumpfile}"
+        sql_file = dumpfile.sub(/\.bz2\z/, '')
+        execute "source #{current_path}/.rbenv-vars && cat #{sql_file} | psql -U $DB_USERNAME $DB_NAME"
+        execute :rm, "#{sql_file}"
+        invoke "deploy:start"
+      end
+    end
+  end
+  
+  desc "Create database"
+  task :create do
+    on primary fetch(:migration_role) do
+      within release_path do
+        with rails_env: fetch(:rails_env) do
+          execute :rake, "db:create"
+        end
+      end
+    end
+  end
+  
+  desc "Drop the database"
+  task :drop do
+    on primary fetch(:migration_role) do
+      within release_path do
+        with rails_env: fetch(:rails_env) do
+          execute :rake, "db:drop"
+        end
+      end
+    end
+  end
+  
+  def get_remote_database_config(db)
+    remote_config = capture("cat #{shared_path}/config/database.yml 2>/dev/null;echo")
+    database = YAML::load(remote_config)
+    return database["#{db}"]['username'], database["#{db}"]['password'], database["#{db}"]['database'], database["#{db}"]['host']
+  end
+
+  def purge_old_backups(basename, backup_path)
+    max_keep = fetch(:keep_db_backups, 30).to_i
+    backup_files = capture("ls -t #{backup_path}/#{basename}*").split.reverse
+    if max_keep >= backup_files.length
+      info "No old database backups to clean up"
+    else
+      info "Keeping #{max_keep} of #{backup_files.length} database backups"
+      delete_backups = (backup_files - backup_files.last(max_keep)).join(" ")
+      execute :rm, "-rf #{delete_backups}"
+    end
+  end
+end

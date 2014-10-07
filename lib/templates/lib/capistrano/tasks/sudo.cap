@@ -1,0 +1,19 @@
+namespace :before_deploy do
+  desc "Please add these permissions before deployment"
+  task :sudo_conf do
+    run_locally do
+      symlinks = fetch(:symlinks)
+    
+      puts "deployer ALL=NOPASSWD:/etc/init.d/monit,/etc/init.d/nginx"
+      puts "deployer ALL=NOPASSWD:/etc/init.d/unicorn_goforit_staging"
+    
+      symlinks.each do |symlink|
+        puts "deployer ALL=NOPASSWD:/bin/ln -nfs #{shared_path}/config/#{symlink[:source]} #{sub_strings(symlink[:link])}"
+      end
+      
+      symlinks.each do |symlink|
+        puts "deployer ALL=NOPASSWD:/bin/rm #{sub_strings(symlink[:link])}"
+      end
+    end
+  end
+end
