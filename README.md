@@ -1,4 +1,4 @@
-= Generator for Capistrano 3 and Ruby on Rails 4.1.x (Postgresql/Nginx/Unicorn)
+# Generator for Capistrano 3 and Ruby on Rails 4.1.x (Postgresql/Nginx/Unicorn)
 
 1. Set up your DNS zones
 2. Install the packages you need your server! (nginx, ruby, rbenv, rbenv-vars, monit, postgresql)
@@ -21,14 +21,14 @@ set :secret_keys, [:secret_key_base]
   
 And the website is live!
 
-= Credits
+# Credits
 
 Most of the scripts come from:
 
 * https://github.com/TalkingQuickly/capistrano-3-rails-template
 * https://github.com/capistrano/capistrano/issues/878
 
-= Contribute
+# Contribute
 
 * Open issues!
 * Send pull requests!
