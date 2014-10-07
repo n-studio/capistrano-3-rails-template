@@ -4,7 +4,7 @@
 2. Install the packages you need your server! (nginx, ruby, rbenv, rbenv-vars, monit, postgresql)
 3. Share a SSH key with your server and another for the repository
 4. Add ``gem 'capistrano-3-rails-template', git: 'https://github.com/n-studio/capistrano-3-rails-template.git', group: :development`` to your Gemfile and run ``bundle update``. Commit and push to your repository.
-5. run ``rails g capristano:rails_template``
+5. run ``rails g capistrano:rails_template``
 6. cap staging before_deploy:sudo_conf
 Add the generated lines to your sudoer
 7. set 
