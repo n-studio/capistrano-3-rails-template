@@ -8,16 +8,24 @@
 6. cap staging before_deploy:sudo_conf
 Add the generated lines to your sudoer
 7. set 
+```
 set :application, 'name_of_application'
 set :repo_url, 'git@github.com:username/my_repository.git'
+```
+
 8. set
+```
 server 'example.com', user: 'deploy', roles: %w{web app db}
-set :server_name, "mywebsite.com"
+set :server_name, "mywebsite.com"``
 set :secret_keys, [:secret_key_base]
+```
+
 9. run
-    ``cap staging deploy:setup_config``
-    ``cap staging deploy:setup_secrets``
-    ``cap staging deploy:first_deploy``
+```
+cap staging deploy:setup_config
+cap staging deploy:setup_secrets
+cap staging deploy:first_deploy
+```
   
 And the website is live!
 
