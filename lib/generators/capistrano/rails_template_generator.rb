@@ -13,6 +13,10 @@ module Capistrano
       Dir.glob(root_path + '/config/**/*.*').each do |file|
         copy_file file, file.sub(root_path + '/', '')
       end
+      
+      Dir.glob(root_path + '/Capfile').each do |file|
+        copy_file file, file.sub(root_path + '/', '')
+      end
     end
   end
 end
