@@ -1,5 +1,6 @@
 # Generator for Capistrano 3 and Ruby on Rails 4.1.x (Postgresql/Nginx/Unicorn)
 
+0. Add .rbenv-vars to your .gitignore
 1. Set up your DNS zones
 2. Install the packages you need your server! (nginx, ruby, rbenv, rbenv-vars, monit, postgresql)
 3. Share a SSH key with your server and another for the repository
