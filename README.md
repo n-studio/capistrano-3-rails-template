@@ -55,7 +55,7 @@ Create a .rbenv-vars with all the data for development and add it to your .gitig
 2. Set up your DNS zones
 3. Install the packages you need your server! (nginx, ruby, rbenv, rbenv-vars, monit, postgresql)
 4. Share a SSH key with your server and another for the repository
-5. Add ``gem 'capistrano-3-rails-template', git: 'https://github.com/n-studio/capistrano-3-rails-template.git', group: :development`` to your Gemfile and run ``bundle update``. Commit and push to your repository.
+5. Add ``gem 'capistrano-3-rails-template', git: 'https://github.com/n-studio/capistrano-3-rails-template.git', group: :development`` to your Gemfile. You will probably need to add ``pg``, ``unicorn`` and ``therubyracer``. Run ``bundle update``. Commit and push to your repository.
 6. run ``rails g capistrano:rails_template``
 7. ``cap staging before_deploy:sudo_conf`` Add the generated lines to your sudoer
 8. set 
