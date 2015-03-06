@@ -6,8 +6,7 @@
 3. Share a SSH key with your server and another for the repository
 4. Add ``gem 'capistrano-3-rails-template', git: 'https://github.com/n-studio/capistrano-3-rails-template.git', group: :development`` to your Gemfile and run ``bundle update``. Commit and push to your repository.
 5. run ``rails g capistrano:rails_template``
-6. cap staging before_deploy:sudo_conf
-Add the generated lines to your sudoer
+6. ``cap staging before_deploy:sudo_conf`` Add the generated lines to your sudoer
 7. set 
 ```
 set :application, 'name_of_application'
