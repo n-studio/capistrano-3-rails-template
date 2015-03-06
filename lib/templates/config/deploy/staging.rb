@@ -18,8 +18,6 @@ server 'example.com', user: 'deploy', roles: %w{web app db}
 
 set :server_name, "mywebsite.com"
 
-set :secret_keys, [:secret_key_base]
-
 set :full_app_name, "#{fetch(:application)}_#{fetch(:stage)}"
 
 set :deploy_user, "deploy"

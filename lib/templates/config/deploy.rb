@@ -1,10 +1,12 @@
-# config valid only for Capistrano 3.1
-# lock '3.2.1'
+# config valid only for Capistrano 3.4
+# lock '3.4.0'
 
 set :application, 'name_of_application'
 set :repo_url, 'git@gihtub.com:username/my_repository.git'
 
-set :rbenv_ruby, '2.1.3'
+set :secret_keys, [:secret_key_base]
+
+set :rbenv_ruby, '2.2.0'
 
 # Default branch is :master
 ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
