@@ -57,20 +57,21 @@ Create a .rbenv-vars with all the data for development and add it to your .gitig
 4. Share a SSH key with your server and another for the repository
 5. Add ``gem 'capistrano-3-rails-template', git: 'https://github.com/n-studio/capistrano-3-rails-template.git', group: :development`` to your Gemfile. You will probably need to add ``pg``, ``unicorn`` and ``therubyracer``. Run ``bundle update``. Commit and push to your repository.
 6. run ``rails g capistrano:rails_template``
-7. ``cap staging before_deploy:sudo_conf`` Add the generated lines to your sudoer
-8. set 
+7. set 
 ```
 set :application, 'name_of_application'
 set :repo_url, 'git@github.com:username/my_repository.git'
-set :secret_keys, [:secret_key_base] # all the keys in your .rbenv-vars
+set :secret_keys, [:secret_key_base, :db_name, :db_username, :db_password] # all the keys in your .rbenv-vars
 ```
-9. set
+8. set
 ```
 server 'example.com', user: 'deploy', roles: %w{web app db}
 set :server_name, "mywebsite.com"``
 set :deploy_user, "deployer"
 ```
-10. run
+9. If you deploy on a custom environment like staging, don't forget to create a staging.rb file
+10. ``cap staging before_deploy:sudo_conf`` Add the generated lines to your sudoer
+11. run
 ```
 cap staging deploy:setup_config
 cap staging deploy:setup_secrets

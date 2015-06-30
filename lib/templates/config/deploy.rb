@@ -2,11 +2,11 @@
 # lock '3.4.0'
 
 set :application, 'name_of_application'
-set :repo_url, 'git@gihtub.com:username/my_repository.git'
+set :repo_url, 'git@github.com:username/my_repository.git'
 
 set :secret_keys, [:secret_key_base]
 
-set :rbenv_ruby, '2.2.0'
+set :rbenv_ruby, '2.2.2'
 
 # Default branch is :master
 ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
