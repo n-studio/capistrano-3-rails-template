@@ -4,15 +4,15 @@ namespace :before_deploy do
     run_locally do
       symlinks = fetch(:symlinks)
     
-      puts "deployer ALL=NOPASSWD:/etc/init.d/monit,/etc/init.d/nginx"
-      puts "deployer ALL=NOPASSWD:/etc/init.d/unicorn_#{fetch(:application)}_#{fetch(:rails_env)}"
+      puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/etc/init.d/monit,/etc/init.d/nginx"
+      puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/etc/init.d/unicorn_#{fetch(:application)}_#{fetch(:rails_env)}"
     
       symlinks.each do |symlink|
-        puts "deployer ALL=NOPASSWD:/bin/ln -nfs #{shared_path}/config/#{symlink[:source]} #{sub_strings(symlink[:link])}"
+        puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/bin/ln -nfs #{shared_path}/config/#{symlink[:source]} #{sub_strings(symlink[:link])}"
       end
       
       symlinks.each do |symlink|
-        puts "deployer ALL=NOPASSWD:/bin/rm #{sub_strings(symlink[:link])}"
+        puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/bin/rm #{sub_strings(symlink[:link])}"
       end
     end
   end
