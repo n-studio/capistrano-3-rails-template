@@ -54,7 +54,7 @@ Create a .rbenv-vars with all the data for development and add it to your .gitig
 
 2. Set up your DNS zones
 3. Install the packages you need your server! (nginx, ruby, rbenv, rbenv-vars, monit, postgresql)
-4. Share a SSH key with your server and another for the repository
+4. Create a new user with ``adduser deploy --disabled-password``. Share a SSH key (``ssh-keygen -t rsa -b 4096``) with your server and another for the repository
 5. Add ``gem 'capistrano-3-rails-template', git: 'https://github.com/n-studio/capistrano-3-rails-template.git', group: :development`` to your Gemfile. You will probably need to add ``pg``, ``unicorn`` and ``therubyracer``. Run ``bundle update``. Commit and push to your repository.
 6. run ``rails g capistrano:rails_template``
 7. set 
@@ -66,8 +66,8 @@ set :secret_keys, [:secret_key_base, :db_name, :db_username, :db_password] # all
 8. set
 ```
 server 'example.com', user: 'deploy', roles: %w{web app db}
-set :server_name, "mywebsite.com"``
-set :deploy_user, "deployer"
+set :server_name, "mywebsite.com"
+set :deploy_user, "deploy"
 ```
 9. If you deploy on a custom environment like staging, don't forget to create a staging.rb file
 10. ``cap staging before_deploy:sudo_conf`` Add the generated lines to your sudoer
