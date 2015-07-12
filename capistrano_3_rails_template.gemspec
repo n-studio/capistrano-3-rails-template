@@ -22,5 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency "capistrano-bundler"
   s.add_dependency "capistrano-rbenv"
   s.add_dependency "capistrano-rails-console"
+  s.add_dependency "capistrano-rbenv-vars"
   s.add_dependency "highline"
 end
