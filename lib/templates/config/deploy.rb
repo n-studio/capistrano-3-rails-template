@@ -4,9 +4,13 @@
 set :application, 'name_of_application'
 set :repo_url, 'git@github.com:username/my_repository.git'
 
-set :secret_keys, [:secret_key_base]
+set :secret_keys, [:secret_key_base, :db_name, :db_username, :db_password]
 
+set :rbenv_type, :user
 set :rbenv_ruby, '2.2.2'
+set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
+set :rbenv_map_bins, %w{rake gem bundle ruby rails}
+set :rbenv_roles, :all # default value
 
 # Default branch is :master
 ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
@@ -28,7 +32,7 @@ set :scm, :git
 set :linked_files, %w{config/database.yml .rbenv-vars}
 
 # Default value for linked_dirs is []
-set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system public/uploads}
+set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system public/uploads}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
