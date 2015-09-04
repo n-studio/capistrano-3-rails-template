@@ -72,6 +72,17 @@ namespace :db do
       end
     end
   end
+
+  desc "Rollback the database"
+  task :rollback do
+    on primary fetch(:migration_role) do
+      within release_path do
+        with rails_env: fetch(:rails_env) do
+          execute :rake, "db:rollback"
+        end
+      end
+    end
+  end
   
   def get_remote_database_config(db)
     remote_config = capture("cat #{shared_path}/config/database.yml 2>/dev/null;echo")
