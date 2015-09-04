@@ -13,7 +13,7 @@ set :rbenv_map_bins, %w{rake gem bundle ruby rails}
 set :rbenv_roles, :all # default value
 
 # Sidekiq
-# set :sidekiq_queue, ['mailer', 'default']
+# set :sidekiq_queue, ['mailers', 'default']
 
 # CRON tasks
 # set :whenever_command, -> { [:bundle, :exec, :whenever] }
