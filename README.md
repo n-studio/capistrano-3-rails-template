@@ -80,6 +80,10 @@ cap staging deploy:first_deploy
   
 And the website is live!
 
+# Upgrade Ruby
+
+Whenever you update your Ruby version, don't forget to run ``cap staging deploy:setup_config`` again.
+
 # Credits
 
 Most of the scripts come from:
