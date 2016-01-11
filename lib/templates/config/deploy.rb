@@ -60,15 +60,12 @@ set(:config_files, %w(
   database.yml
   log_rotation
   monit
-  unicorn.rb
-  unicorn_init.sh
 ))
 
 # which config files should be made executable after copying
 # by deploy:setup_config
-set(:executable_config_files, %w(
-  unicorn_init.sh
-))
+# set(:executable_config_files, %w(
+# ))
 
 # files which need to be symlinked to other parts of the
 # filesystem. For example nginx virtualhosts, log rotation
@@ -79,10 +76,6 @@ set(:symlinks, [
   {
     source: "nginx.conf",
     link: "/etc/nginx/sites-enabled/{{full_app_name}}"
-  },
-  {
-    source: "unicorn_init.sh",
-    link: "/etc/init.d/unicorn_{{full_app_name}}"
   },
   {
     source: "log_rotation",

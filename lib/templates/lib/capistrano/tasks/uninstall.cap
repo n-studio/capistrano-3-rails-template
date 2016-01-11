@@ -6,7 +6,7 @@ namespace :undeploy do
       ask :confirmation, "Are you sure to delete the app? (yes/no)"
       
       if fetch(:confirmation) == "yes"
-        # stop unicorn
+        # stop passenger
         invoke "deploy:stop"
         
         # delete symlinks

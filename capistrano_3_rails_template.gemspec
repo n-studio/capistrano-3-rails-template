@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", ">= 4.1.0"
   s.add_dependency "capistrano-rails"
+  s.add_dependency "capistrano-passenger"
   s.add_dependency "capistrano-bundler"
   s.add_dependency "capistrano-rbenv"
   s.add_dependency "capistrano-rails-console"

@@ -5,7 +5,6 @@ namespace :before_deploy do
       symlinks = fetch(:symlinks)
     
       puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/etc/init.d/monit,/etc/init.d/nginx"
-      puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/etc/init.d/unicorn_#{fetch(:application)}_#{fetch(:rails_env)}"
     
       symlinks.each do |symlink|
         puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/bin/ln -nfs #{shared_path}/config/#{symlink[:source]} #{sub_strings(symlink[:link])}"
