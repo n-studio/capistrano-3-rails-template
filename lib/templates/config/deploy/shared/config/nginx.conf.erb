@@ -10,6 +10,8 @@ server {
   server_name <%= fetch(:server_name) %>;
   listen 80;
   passenger_enabled on;
+  passenger_ruby /home/<%= fetch(:deploy_user) %>/.rbenv/shims/ruby;
+  passenger_app_env <%= fetch(:rails_env) %>;
   root <%= fetch(:deploy_to) %>/current/public;
 
   location ^~ /assets/ {
@@ -29,6 +31,8 @@ server {
   server_name <%= fetch(:server_name) %>;
   listen 443;
   passenger_enabled on;
+  passenger_ruby /home/<%= fetch(:deploy_user) %>/.rbenv/shims/ruby;
+  passenger_app_env <%= fetch(:rails_env) %>;
   root <%= fetch(:deploy_to) %>/current/public;
 
   location ^~ /assets/ {

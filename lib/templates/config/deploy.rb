@@ -64,8 +64,8 @@ set(:config_files, %w(
 
 # which config files should be made executable after copying
 # by deploy:setup_config
-# set(:executable_config_files, %w(
-# ))
+set(:executable_config_files, %w(
+))
 
 # files which need to be symlinked to other parts of the
 # filesystem. For example nginx virtualhosts, log rotation
