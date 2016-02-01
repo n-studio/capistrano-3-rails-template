@@ -1,0 +1,33 @@
+namespace :passenger do
+  desc "Stop your Passenger application"
+  task :stop do
+    on roles(:app) do |server|
+      full_app_name = fetch(:full_app_name)
+      symlink_path = sub_strings("/etc/nginx/sites-enabled/{{full_app_name}}")
+      sudo "rm #{symlink_path}"
+    end
+  end
+
+  desc "Start (or un-stop) your Passenger application"
+  task :start do
+    on roles(:app) do |server|
+      full_app_name = fetch(:full_app_name)
+      symlink_path = sub_strings("/etc/nginx/sites-enabled/{{full_app_name}}")
+      sudo "/bin/ln -nfs #{shared_path}/config/nginx.conf #{symlink_path}"
+    end
+  end
+end
+
+namespace :deploy do
+  desc 'Stop your Passenger application'
+  task :stop do
+    invoke('passenger:stop')
+    invoke('nginx:restart')
+  end
+  
+  desc 'Start your Passenger application'
+  task :start do
+    invoke('passenger:start')
+    invoke('nginx:restart')
+  end
+end
