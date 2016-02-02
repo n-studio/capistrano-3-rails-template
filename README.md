@@ -82,21 +82,23 @@ And the website is live!
 
 ## Deploy Sidekiq
 
-1. Uncomment the sidekiq related lines in ``sudo.cap``, run ``cap staging before_deploy:sudo_conf`` and edit your sudoer file with the generated lines
-2. Set ``:sidekiq_queue``
-3. Add ``config/sidekiq.yml`` in ``:linked_files``
-4. Add ``sidekiq.yml`` and ``sidekiq_init.sh`` in ``:config_files``
-5. Add ``sidekiq_init.sh`` in ``:executable_config_files``
-6. Add ``{source: "sidekiq_init.sh", link: "/etc/init.d/sidekiq_{{full_app_name}}"}`` in ``:symlinks``
-7. Run ``cap staging deploy:setup_config`` again
+1. Add ``worker`` in your roles.
+2. Uncomment the sidekiq related lines in ``sudo.cap``, run ``cap staging before_deploy:sudo_conf`` and edit your sudoer file with the generated lines
+3. Set ``:sidekiq_queue``
+4. Add ``config/sidekiq.yml`` in ``:linked_files``
+5. Add ``sidekiq.yml`` and ``sidekiq_init.sh`` in ``:config_files``
+6. Add ``sidekiq_init.sh`` in ``:executable_config_files``
+7. Add ``{source: "sidekiq_init.sh", link: "/etc/init.d/sidekiq_{{full_app_name}}"}`` in ``:symlinks``
+8. Run ``cap staging deploy:setup_config`` again
 
 ## Deploy Action Cable
 
-1. Uncomment the action cable related lines in ``sudo.cap``, run ``cap staging before_deploy:sudo_conf`` and edit your sudoer file with the generated lines
-2. Add ``actioncable_init.sh`` in ``:config_files``
-3. Add ``actioncable_init.sh`` in ``:executable_config_files``
-4. Add ``{source: "actioncable_init.sh", link: "/etc/init.d/actioncable_{{full_app_name}}"}`` in ``:symlinks``
-5. Run ``cap staging deploy:setup_config`` again
+1. Add ``ws`` in your roles.
+2. Uncomment the action cable related lines in ``sudo.cap``, run ``cap staging before_deploy:sudo_conf`` and edit your sudoer file with the generated lines
+3. Add ``actioncable_init.sh`` in ``:config_files``
+4. Add ``actioncable_init.sh`` in ``:executable_config_files``
+5. Add ``{source: "actioncable_init.sh", link: "/etc/init.d/actioncable_{{full_app_name}}"}`` in ``:symlinks``
+6. Run ``cap staging deploy:setup_config`` again
 
 # Upgrade Ruby
 
