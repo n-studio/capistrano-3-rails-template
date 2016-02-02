@@ -1,0 +1,33 @@
+namespace :load do
+  task :defaults do
+    set :cable_pid, -> { File.join(current_path, "tmp", "pids", "cable.pid") }
+    set :cable_config_path, -> { File.join(current_path, "cable", "config.ru") }
+    set :cable_state, -> { File.join(shared_path, 'tmp', 'pids', 'cable.state') }
+    set :cable_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
+    set :cable_port, -> { "28080" }
+  end
+end
+
+namespace :cable do
+  desc "Start the Action Cable server"
+  task :start do
+    on roles(:ws) do |server|
+      sudo "/etc/init.d/actioncable_#{fetch(:full_app_name)} start"
+    end
+  end
+  
+  %w[halt stop status restart].map do |command|
+    desc "#{command} the Action Cable server"
+    task command do
+      on roles(:ws) do |server|
+        sudo "/etc/init.d/actioncable_#{fetch(:full_app_name)} #{command}"
+      end
+    end
+  end
+end
+
+namespace :deploy do
+  after :publishing, :restart_cable do
+    invoke 'cable:restart'
+  end
+end

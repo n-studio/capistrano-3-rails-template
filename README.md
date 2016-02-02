@@ -1,4 +1,4 @@
-# Generator for Capistrano 3 and Ruby on Rails 4.1.x (Postgresql/Nginx/Passenger)
+# Generator for Capistrano 3 and Ruby on Rails 4.1.x (Postgresql/Nginx/Unicorn)
 
 1. Change your secrets.yml file as following:
 ```
@@ -53,9 +53,9 @@ production:
 Create a .rbenv-vars with all the data for development and add it to your .gitignore.
 
 2. Set up your DNS zones
-3. Install the packages you need your server! (ruby, nginx, passenger, rbenv, rbenv-vars, postgresql, libpq-dev, postgresql-contrib)
+3. Install the packages you need your server! (nginx, ruby, rbenv, rbenv-vars, monit, postgresql, libpq-dev, postgresql-contrib)
 4. Create a new user with ``adduser deploy --disabled-password``. Share a SSH key (``ssh-keygen -t rsa -b 4096``) with your server and another for the repository. Create a new postgresql user ``su - postgres`` ``psql`` ``CREATE ROLE deploy LOGIN PASSWORD 'my_password' SUPERUSER; CREATE DATABASE deploy WITH OWNER = deploy;``
-5. Add ``gem 'capistrano-3-rails-template', git: 'https://github.com/n-studio/capistrano-3-rails-template.git', group: :development`` to your Gemfile. You will probably need to add ``pg`` and ``therubyracer``. Run ``bundle update``. Commit and push to your repository.
+5. Add ``gem 'capistrano-3-rails-template', git: 'https://github.com/n-studio/capistrano-3-rails-template.git', group: :development`` to your Gemfile. You will probably need to add ``pg``, ``unicorn`` and ``therubyracer``. Run ``bundle update``. Commit and push to your repository.
 6. run ``rails g capistrano:rails_template``
 7. set 
 ```
@@ -89,6 +89,13 @@ And the website is live!
 5. Add ``sidekiq_init.sh`` in ``:executable_config_files``
 6. Add ``{source: "sidekiq_init.sh", link: "/etc/init.d/sidekiq_{{full_app_name}}"}`` in ``:symlinks``
 7. Run ``cap staging deploy:setup_config`` again
+
+## Deploy Action Cable
+
+1. Add ``actioncable_init.sh`` in ``:config_files``
+2. Add ``actioncable_init.sh`` in ``:executable_config_files``
+3. Add ``{source: "actioncable_init.sh", link: "/etc/init.d/actioncable_{{full_app_name}}"}`` in ``:symlinks``
+4. Run ``cap staging deploy:setup_config`` again
 
 # Upgrade Ruby
 
