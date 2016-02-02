@@ -1,5 +1,3 @@
-Rake::Task["sidekiq:start"].clear_actions
-
 namespace :sidekiq do
   desc "Start the Sidekiq server"
   task :start do
