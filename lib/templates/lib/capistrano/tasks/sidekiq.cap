@@ -1,5 +1,7 @@
+Rake::Task["sidekiq:start"].clear_actions
+
 namespace :sidekiq do
-  desc "Start the Action Cable server"
+  desc "Start the Sidekiq server"
   task :start do
     on roles(:worker) do |server|
       sudo "/etc/init.d/sidekiq_#{fetch(:full_app_name)} start"
@@ -7,11 +9,17 @@ namespace :sidekiq do
   end
   
   %w[halt stop status restart].map do |command|
-    desc "#{command} the Action Cable server"
+    desc "#{command} the Sidekiq server"
     task command do
       on roles(:worker) do |server|
         sudo "/etc/init.d/sidekiq_#{fetch(:full_app_name)} #{command}"
       end
     end
+  end
+end
+
+namespace :deploy do
+  after :publishing, :restart_sidekiq do
+    invoke 'sidekiq:restart'
   end
 end
