@@ -3,8 +3,8 @@ set -e
 
 APP_ROOT=<%= current_path %>
 PID=$APP_ROOT/tmp/pids/sidekiq.pid
-CMD="cd $APP_ROOT; RAILS_ENV=<%= "#{fetch(:rails_env)}" %> nohup bundle exec sidekiq -e <%= "#{fetch(:rails_env)}" %> -C $APP_ROOT/config/sidekiq.yml -i 0 -P $PID >> $APP_ROOT/log/sidekiq.log 2>&1 &"
-STOP_CMD="cd $APP_ROOT; RAILS_ENV=<%= "#{fetch(:rails_env)}" %> bundle exec sidekiqctl stop $APP_ROOT/tmp/pids/sidekiq.pid 10"
+CMD="cd $APP_ROOT; <%= fetch(:rbenv_prefix) %> bundle exec sidekiq -e <%= fetch(:rails_env) %> -C $APP_ROOT/config/sidekiq.yml -i 0 -P $PID >> $APP_ROOT/log/sidekiq.log 2>&1 &"
+STOP_CMD="cd $APP_ROOT; RAILS_ENV=<%= fetch(:rails_env) %> <%= fetch(:rbenv_prefix) %> bundle exec sidekiqctl stop $PID 10"
 AS_USER=<%= fetch(:deploy_user) %>
 
 run () {
