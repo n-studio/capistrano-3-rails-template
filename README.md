@@ -90,6 +90,13 @@ And the website is live!
 6. Add ``{source: "sidekiq_init.sh", link: "/etc/init.d/sidekiq_{{full_app_name}}"}`` in ``:symlinks``
 7. Run ``cap staging deploy:setup_config`` again
 
+## Deploy Action Cable
+
+1. Add ``actioncable_init.sh`` in ``:config_files``
+2. Add ``actioncable_init.sh`` in ``:executable_config_files``
+3. Add ``{source: "actioncable_init.sh", link: "/etc/init.d/actioncable_{{full_app_name}}"}`` in ``:symlinks``
+4. Run ``cap staging deploy:setup_config`` again
+
 # Upgrade Ruby
 
 Whenever you update your Ruby version, don't forget to run ``cap staging deploy:setup_config`` again.
