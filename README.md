@@ -80,6 +80,16 @@ cap staging deploy:first_deploy
   
 And the website is live!
 
+## Deploy Sidekiq
+
+1. Uncomment ``require 'capistrano/sidekiq'`` in ``Capfile``
+2. Set ``:sidekiq_queue``
+3. Add ``config/sidekiq.yml`` in ``:linked_files``
+4. Add ``sidekiq.yml`` and ``sidekiq_init.sh`` in ``:config_files``
+5. Add ``sidekiq_init.sh`` in ``:executable_config_files``
+6. Add ``{source: "sidekiq_init.sh", link: "/etc/init.d/sidekiq_{{full_app_name}}"}`` in ``:symlinks``
+7. Run ``cap staging deploy:setup_config`` again
+
 # Upgrade Ruby
 
 Whenever you update your Ruby version, don't forget to run ``cap staging deploy:setup_config`` again.

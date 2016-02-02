@@ -1,0 +1,17 @@
+namespace :sidekiq do
+  desc "Start the Action Cable server"
+  task :start do
+    on roles(:worker) do |server|
+      sudo "/etc/init.d/sidekiq_#{fetch(:full_app_name)} start"
+    end
+  end
+  
+  %w[halt stop status restart].map do |command|
+    desc "#{command} the Action Cable server"
+    task command do
+      on roles(:worker) do |server|
+        sudo "/etc/init.d/sidekiq_#{fetch(:full_app_name)} #{command}"
+      end
+    end
+  end
+end
