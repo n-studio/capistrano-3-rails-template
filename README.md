@@ -82,7 +82,7 @@ And the website is live!
 
 ## Deploy Sidekiq
 
-1. Uncomment ``require 'capistrano/sidekiq'`` in ``Capfile``
+1. Uncomment the sidekiq related lines in ``sudo.cap``, run ``cap staging before_deploy:sudo_conf`` and edit your sudoer file with the generated lines
 2. Set ``:sidekiq_queue``
 3. Add ``config/sidekiq.yml`` in ``:linked_files``
 4. Add ``sidekiq.yml`` and ``sidekiq_init.sh`` in ``:config_files``
@@ -92,10 +92,11 @@ And the website is live!
 
 ## Deploy Action Cable
 
-1. Add ``actioncable_init.sh`` in ``:config_files``
-2. Add ``actioncable_init.sh`` in ``:executable_config_files``
-3. Add ``{source: "actioncable_init.sh", link: "/etc/init.d/actioncable_{{full_app_name}}"}`` in ``:symlinks``
-4. Run ``cap staging deploy:setup_config`` again
+1. Uncomment the action cable related lines in ``sudo.cap``, run ``cap staging before_deploy:sudo_conf`` and edit your sudoer file with the generated lines
+2. Add ``actioncable_init.sh`` in ``:config_files``
+3. Add ``actioncable_init.sh`` in ``:executable_config_files``
+4. Add ``{source: "actioncable_init.sh", link: "/etc/init.d/actioncable_{{full_app_name}}"}`` in ``:symlinks``
+5. Run ``cap staging deploy:setup_config`` again
 
 # Upgrade Ruby
 
