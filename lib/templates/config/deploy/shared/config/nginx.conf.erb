@@ -1,6 +1,7 @@
 <% if fetch(:force_ssl, false) %>
 server {
   server_name <%= fetch(:server_name) %>;
+  listen 80;
   listen [::]:80;
   ## redirect http to https ##
   rewrite ^ https://$server_name$request_uri? permanent;
@@ -8,6 +9,7 @@ server {
 <% else %>
 server {
   server_name <%= fetch(:server_name) %>;
+  listen 80;
   listen [::]:80;
   passenger_enabled on;
   passenger_ruby /home/<%= fetch(:deploy_user) %>/.rbenv/shims/ruby;
@@ -29,6 +31,7 @@ server {
 <% if fetch(:enable_ssl) %>
 server {
   server_name <%= fetch(:server_name) %>;
+  listen 443;
   listen [::]:443;
   passenger_enabled on;
   passenger_ruby /home/<%= fetch(:deploy_user) %>/.rbenv/shims/ruby;
