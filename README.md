@@ -19,43 +19,12 @@ production:
   <<: *default
 ```
 
-And your database.yml as following:
-```
-postgresql: &postgresql
-  adapter: postgresql
-  encoding: unicode
-  pool: 5
-  
-default: &default
-  database: <%= ENV['DB_NAME'] %>
-  username: <%= ENV['DB_USERNAME'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
-
-development:
-  <<: *postgresql
-  <<: *default
-  
-test:
-  <<: *postgresql
-  username: test
-  password:
-  database: your_app_name_test
-
-staging:
-  <<: *postgresql
-  <<: *default
-  
-production:
-  <<: *postgresql
-  <<: *default
-```
-
 Create a .rbenv-vars with all the data for development and add it to your .gitignore.
 
 2. Set up your DNS zones
 3. Install the packages you need your server! (nginx, ruby, rbenv, rbenv-vars, monit, postgresql, libpq-dev, postgresql-contrib)
 4. Create a new user with ``adduser deploy --disabled-password``. Share a SSH key (``ssh-keygen -t rsa -b 4096``) with your server and another for the repository. Create a new postgresql user ``su - postgres`` ``psql`` ``CREATE ROLE deploy LOGIN PASSWORD 'my_password' SUPERUSER; CREATE DATABASE deploy WITH OWNER = deploy;``
-5. Add ``gem 'capistrano-3-rails-template', git: 'https://github.com/n-studio/capistrano-3-rails-template.git', group: :development, branch: 'passenger'`` to your Gemfile. You will probably need to add ``pg``, ``unicorn`` and ``therubyracer``. Run ``bundle update``. Commit and push to your repository.
+5. Add ``gem 'capistrano-3-rails-template', git: 'https://github.com/n-studio/capistrano-3-rails-template.git', group: :development, branch: 'passenger'`` to your Gemfile. You will probably need to add ``sqlite3``, ``unicorn`` and ``therubyracer``. Run ``bundle update``. Commit and push to your repository.
 6. run ``rails g capistrano:rails_template``
 7. set 
 ```
