@@ -1,4 +1,4 @@
-# Generator for Capistrano 3 and Ruby on Rails 4.1.x (Postgresql/Nginx/Unicorn)
+# Generator for Capistrano 3 and Ruby on Rails 4.1.x (Postgresql/Nginx/Passenger)
 
 1. Change your secrets.yml file as following:
 ```
