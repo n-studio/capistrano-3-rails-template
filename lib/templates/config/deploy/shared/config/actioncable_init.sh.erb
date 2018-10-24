@@ -8,7 +8,6 @@ STOP_CMD="cd $APP_ROOT; RAILS_ENV=<%= fetch(:rails_env) %> <%= fetch(:rbenv_pref
 HALT_CMD="cd $APP_ROOT; RAILS_ENV=<%= fetch(:rails_env) %> <%= fetch(:rbenv_prefix) %> bundle exec pumactl -S <%= fetch(:cable_state) %> halt"
 STATUS_CMD="cd $APP_ROOT; RAILS_ENV=<%= fetch(:rails_env) %> <%= fetch(:rbenv_prefix) %> bundle exec pumactl -S <%= fetch(:cable_state) %> status"
 AS_USER=<%= fetch(:deploy_user) %>
-# RBENV_ROOT=$HOME/.rbenv RBENV_VERSION=2.3.0 $HOME/.rbenv/bin/rbenv exec bundle exec sidekiqctl stop /home/deploy_solfanto/apps/gsw_production/shared/tmp/pids/sidekiq-0.pid 10
 
 run () {
   if [ "$(id -un)" = "$AS_USER" ]; then
