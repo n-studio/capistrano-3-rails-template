@@ -1,0 +1,16 @@
+[Unit]
+Description=Puma Action Cable Server
+After=network.target
+
+[Service]
+Type=simple
+User=<%= fetch(:deploy_user) %>
+WorkingDirectory=<%= current_path %>
+ExecStart=<%= fetch(:rbenv_prefix) %> bundle exec puma --state <%= fetch(:cable_state) %> -p <%= fetch(:cable_port) %> -e <%= fetch(:rails_env) %> -C <%= fetch(:cable_config_path) %>
+ExecStop=<%= fetch(:rbenv_prefix) %> bundle exec pumactl -S <%= fetch(:cable_state) %> stop RAILS_ENV=<%= fetch(:rails_env) %>
+PIDFile=<%= fetch(:cable_pid) %>
+TimeoutSec=15
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

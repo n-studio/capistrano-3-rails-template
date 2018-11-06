@@ -12,7 +12,7 @@ namespace :cable do
   desc "Start the Action Cable server"
   task :start do
     on roles(:ws) do |server|
-      sudo "/etc/init.d/actioncable_#{fetch(:full_app_name)} start"
+      sudo "/usr/sbin/service actioncable_#{fetch(:full_app_name)} start"
     end
   end
   
@@ -20,7 +20,7 @@ namespace :cable do
     desc "#{command} the Action Cable server"
     task command do
       on roles(:ws) do |server|
-        sudo "/etc/init.d/actioncable_#{fetch(:full_app_name)} #{command}"
+        sudo "/usr/sbin/service actioncable_#{fetch(:full_app_name)} #{command}"
       end
     end
   end

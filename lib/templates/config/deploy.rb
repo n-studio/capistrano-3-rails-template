@@ -26,6 +26,7 @@ ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default value for :format is :pretty
 # set :format, :pretty
+set :format_options, truncate: false
 
 # Default value for :log_level is :debug
 # set :log_level, :debug

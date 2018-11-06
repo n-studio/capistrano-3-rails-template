@@ -12,7 +12,7 @@ namespace :db do
         basename = 'database'
       
         filename = "\"#{basename}_#{fetch(:stage)}_\"$DB_NAME\"_#{Time.now.strftime '%Y-%m-%d_%H-%M-%S'}.sql.bz2\""
-        info "We will backup to file: #{backup_path}/#{filename}"
+        execute "source #{current_path}/.rbenv-vars && echo \"We will backup to file: #{backup_path}/\"#{filename}"
       
         execute "source #{current_path}/.rbenv-vars && cd #{current_path} && pg_dump -U $DB_USERNAME $DB_NAME | bzip2 -9 > #{backup_path}/#{filename}"
           
