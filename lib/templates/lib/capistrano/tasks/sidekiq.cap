@@ -1,0 +1,23 @@
+namespace :sidekiq do
+  %w[start stop restart status].map do |command|
+    desc "#{command} the Sidekiq server"
+    task command do
+      on roles(:worker) do |server|
+        sudo "/usr/sbin/service sidekiq_#{fetch(:full_app_name)} #{command}"
+      end
+    end
+  end
+  
+  desc "Register service in systemctl"
+  task :register do
+    on roles(:worker) do |server|
+      sudo "/bin/systemctl enable sidekiq_#{fetch(:full_app_name)}"
+    end
+  end
+end
+
+namespace :deploy do
+  after :publishing, :restart_sidekiq do
+    invoke 'sidekiq:restart'
+  end
+end

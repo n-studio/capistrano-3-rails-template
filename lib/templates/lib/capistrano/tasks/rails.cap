@@ -1,0 +1,14 @@
+namespace :rails do
+  desc 'Run a rake command `cap [staging] rails:rake`'
+  task :rake do
+   on roles(:app) do |server|
+     ask :rake, "Enter your rake command"
+     
+     within release_path do
+       with rails_env: fetch(:rails_env) do
+         execute :rake, fetch(:rake).gsub(/\Arake /, '')
+       end
+     end
+   end
+  end
+end

@@ -1,0 +1,14 @@
+default: &default
+  adapter: postgresql
+  timeout: 5000
+  encoding: utf8
+  reconnect: false
+  pool: 5
+
+<%= fetch(:rails_env) %>:
+  <<: *default
+  database: <%%= ENV['DB_NAME'] %>
+  username: <%%= ENV['DB_USERNAME'] %>
+  password: <%%= ENV['DB_PASSWORD'] %>
+  host:
+  port: 5432

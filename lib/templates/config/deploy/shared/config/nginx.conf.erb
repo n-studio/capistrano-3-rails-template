@@ -1,0 +1,72 @@
+upstream unicorn-<%= fetch(:full_app_name) %> {
+  server unix:/tmp/unicorn.<%= fetch(:full_app_name) %>.sock fail_timeout=0;
+}
+
+<% if fetch(:force_ssl, false) %>
+server {
+  server_name <%= fetch(:server_name) %>;
+  listen 80;
+  listen [::]:80;
+  ## redirect http to https ##
+  rewrite ^ https://$server_name$request_uri? permanent;
+}
+<% else %>
+server {
+  server_name <%= fetch(:server_name) %>;
+  listen 80;
+  listen [::]:80;
+  root <%= fetch(:deploy_to) %>/current/public;
+
+  location ^~ /assets/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
+
+  try_files $uri/index.html $uri @unicorn;
+  location @unicorn {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_pass http://unicorn-<%= fetch(:full_app_name) %>;
+  }
+
+  error_page 500 502 503 504 /500.html;
+  client_max_body_size 4G;
+  keepalive_timeout 10;
+}
+<% end %>
+
+<% if fetch(:enable_ssl) %>
+server {
+  server_name <%= fetch(:server_name) %>;
+  listen 443;
+  listen [::]:443;
+  root <%= fetch(:deploy_to) %>/current/public;
+
+  location ^~ /assets/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
+
+  try_files $uri/index.html $uri @unicorn;
+  location @unicorn {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Proto https;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_pass http://unicorn-<%= fetch(:full_app_name) %>;
+  }
+
+  error_page 500 502 503 504 /500.html;
+  client_max_body_size 4G;
+  keepalive_timeout 10;
+
+  ssl on;
+  ssl_certificate <%= fetch(:deploy_to) %>/shared/ssl_cert.crt;
+  ssl_certificate_key <%= fetch(:deploy_to) %>/shared/ssl_private_key.key;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers HIGH:!aNULL:!MD5;
+}
+<% end %>

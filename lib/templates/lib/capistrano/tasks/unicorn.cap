@@ -1,0 +1,14 @@
+namespace :deploy do
+  desc 'Commands for unicorn application (start/stop/restart)'
+  %w(start stop restart).each do |command|
+    task command.to_sym do
+      on roles(:app), in: :sequence, wait: 5 do
+        if fetch(:cold) && command == 'restart'
+          sudo "/usr/sbin/service unicorn_#{fetch(:full_app_name)} start"
+        else
+          sudo "/usr/sbin/service unicorn_#{fetch(:full_app_name)} #{command}"
+        end
+      end
+    end
+  end
+end

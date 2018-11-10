@@ -1,0 +1,3 @@
+<% fetch(:secret_keys).each do |key| %>
+<%= key.to_s.upcase %>=<%= fetch(key) %>
+<% end %>

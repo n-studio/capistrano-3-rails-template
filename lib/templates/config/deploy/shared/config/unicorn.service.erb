@@ -1,0 +1,25 @@
+[Unit]
+Description = Unicorn Rack application server  <%= fetch(:full_app_name) %>
+Wants = unicorn.socket
+After = unicorn.socket
+
+[Service]
+Type = simple
+User = <%= fetch(:deploy_user) %>
+WorkingDirectory = <%= current_path %>
+ExecStart = /bin/bash -lc '/home/<%= fetch(:deploy_user) %>/.rbenv/shims/bundle exec unicorn -c <%= "#{shared_path}/config/unicorn.rb" %> -E <%= fetch(:rails_env) %>'
+Sockets = unicorn.socket
+KillSignal = SIGQUIT
+ExecReload = /bin/kill -HUP $MAINPID
+
+# This is based on the Unicorn::Configurator#timeout directive,
+# adding a few seconds for scheduling differences:
+TimeoutStopSec = 62
+
+# Only kill the master process, it may be harmful to signal
+# workers via default "control-group" setting since some
+# Ruby extensions and applications misbehave on interrupts
+KillMode = process
+
+[Install]
+WantedBy = multi-user.target
