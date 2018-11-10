@@ -25,5 +25,6 @@ Gem::Specification.new do |s|
   s.add_dependency "capistrano-rails-console"
   s.add_dependency "capistrano-rails-tail-log"
   s.add_dependency "capistrano-rbenv-vars"
+  s.add_dependency "capistrano-yarn"
   s.add_dependency "highline"
 end
