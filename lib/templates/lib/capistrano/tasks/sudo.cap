@@ -4,9 +4,9 @@ namespace :before_deploy do
     run_locally do
       symlinks = fetch(:symlinks)
     
-      puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/etc/init.d/nginx"
-      # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/etc/init.d/actioncable_#{fetch(:application)}_#{fetch(:rails_env)}"
-      # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/etc/init.d/sidekiq_#{fetch(:application)}_#{fetch(:rails_env)}"
+      puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/sbin/service nginx start,/usr/sbin/service nginx stop,/usr/sbin/service nginx restart,/usr/sbin/service nginx reload,/usr/sbin/service nginx status"
+      # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/sbin/service actioncable_#{fetch(:full_app_name)} start,/usr/sbin/service actioncable_#{fetch(:full_app_name)} stop,/usr/sbin/service actioncable_#{fetch(:full_app_name)} restart"
+      # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/sbin/service sidekiq_#{fetch(:full_app_name)} start,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} stop,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} restart,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} status,/bin/systemctl enable sidekiq_#{fetch(:full_app_name)}"
     
       symlinks.each do |symlink|
         puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/bin/ln -nfs #{shared_path}/config/#{symlink[:source]} #{sub_strings(symlink[:link])}"

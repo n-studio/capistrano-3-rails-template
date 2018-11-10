@@ -7,7 +7,7 @@ set :repo_url, 'git@github.com:username/my_repository.git'
 set :secret_keys, [:secret_key_base, :db_name, :db_username, :db_password]
 
 set :rbenv_type, :user
-set :rbenv_ruby, '2.3.0'
+set :rbenv_ruby, '2.5.1'
 set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
 set :rbenv_map_bins, %w{rake gem bundle ruby rails}
 set :rbenv_roles, :all # default value
@@ -26,6 +26,7 @@ ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default value for :format is :pretty
 # set :format, :pretty
+set :format_options, truncate: false
 
 # Default value for :log_level is :debug
 # set :log_level, :debug
@@ -56,15 +57,11 @@ set(:config_files, %w(
   nginx.conf
   database.yml
   log_rotation
-  monit
-  unicorn.rb
-  unicorn_init.sh
 ))
 
 # which config files should be made executable after copying
 # by deploy:setup_config
 set(:executable_config_files, %w(
-  unicorn_init.sh
 ))
 
 # files which need to be symlinked to other parts of the
@@ -78,16 +75,8 @@ set(:symlinks, [
     link: "/etc/nginx/sites-enabled/{{full_app_name}}"
   },
   {
-    source: "unicorn_init.sh",
-    link: "/etc/init.d/unicorn_{{full_app_name}}"
-  },
-  {
     source: "log_rotation",
    link: "/etc/logrotate.d/{{full_app_name}}"
-  },
-  {
-    source: "monit",
-    link: "/etc/monit/conf.d/{{full_app_name}}.conf"
   }
 ])
 
@@ -112,10 +101,6 @@ namespace :deploy do
   # reload nginx to it will pick up any modified vhosts from
   # setup_config
   after 'deploy:setup_config', 'nginx:reload'
-
-  # Restart monit so it will pick up any monit configurations
-  # we've added
-  after 'deploy:setup_config', 'monit:restart'
 
   # As of Capistrano 3.1, the `deploy:restart` task is not called
   # automatically.
