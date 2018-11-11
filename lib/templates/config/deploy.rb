@@ -1,5 +1,5 @@
-# config valid only for Capistrano 3.4
-# lock '3.4.0'
+# config valid for current version and patch releases of Capistrano
+lock "~> 3.11.0"
 
 set :application, 'name_of_application'
 set :repo_url, 'git@github.com:username/my_repository.git'
@@ -21,18 +21,21 @@ set :rbenv_roles, :all # default value
 # set :whenever_identifier, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
 
 # Default branch is :master
-ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
-# set :branch, :master
+ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
-# Default value for :format is :pretty
-# set :format, :pretty
+# Default value for :format is :airbrussh.
+# set :format, :airbrussh
+
+# You can configure the Airbrussh format using :format_options.
+# These are the defaults.
+# set :format_options, command_output: true, log_file: "log/capistrano.log", color: :auto, truncate: :auto
 set :format_options, truncate: false
-
-# Default value for :log_level is :debug
-# set :log_level, :debug
 
 # Default value for :pty is false
 # set :pty, true
+
+# Default value for :format is :pretty
+# set :format, :pretty
 
 # Default value for :linked_files is []
 set :linked_files, %w{config/database.yml .rbenv-vars}
@@ -42,6 +45,9 @@ set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/sys
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
+
+# Default value for local_user is ENV['USER']
+# set :local_user, -> { `git config user.name`.chomp }
 
 # Default value for keep_releases is 5
 set :keep_releases, 5
