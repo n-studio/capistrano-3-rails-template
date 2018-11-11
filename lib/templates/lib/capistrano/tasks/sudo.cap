@@ -5,8 +5,8 @@ namespace :before_deploy do
       symlinks = fetch(:symlinks)
     
       puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/sbin/service nginx start,/usr/sbin/service nginx stop,/usr/sbin/service nginx restart,/usr/sbin/service nginx reload,/usr/sbin/service nginx status"
-      # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/sbin/service actioncable_#{fetch(:full_app_name)} start,/usr/sbin/service actioncable_#{fetch(:full_app_name)} stop,/usr/sbin/service actioncable_#{fetch(:full_app_name)} restart"
-      # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/sbin/service sidekiq_#{fetch(:full_app_name)} start,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} stop,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} restart,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} status,/bin/systemctl enable sidekiq_#{fetch(:full_app_name)}"
+      # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/sbin/service actioncable_#{fetch(:full_app_name)} start,/usr/sbin/service actioncable_#{fetch(:full_app_name)} stop,/usr/sbin/service actioncable_#{fetch(:full_app_name)} restart,/bin/systemctl enable #{shared_path}/config/actioncable_#{fetch(:full_app_name)}.service,/bin/systemctl disable actioncable_#{fetch(:full_app_name)}.service"
+      # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/sbin/service sidekiq_#{fetch(:full_app_name)} start,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} stop,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} restart,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} status,/bin/systemctl enable #{shared_path}/config/sidekiq_#{fetch(:full_app_name)}.service,/bin/systemctl disable sidekiq_#{fetch(:full_app_name)}.service"
     
       symlinks.each do |symlink|
         puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/bin/ln -nfs #{shared_path}/config/#{symlink[:source]} #{sub_strings(symlink[:link])}"

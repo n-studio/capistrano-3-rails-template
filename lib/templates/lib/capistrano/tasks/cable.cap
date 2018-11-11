@@ -24,6 +24,21 @@ namespace :cable do
       end
     end
   end
+  
+  desc "Enable Action cable service"
+  task :enable do
+    on roles(:app) do |server|
+      smart_template "config/sidekiq.service", "config/actioncable_#{fetch(:full_app_name)}.service"
+      sudo "/bin/systemctl enable #{shared_path}/config/actioncable_#{fetch(:full_app_name)}.service"
+    end
+  end
+  
+  desc "Disable Action cable service"
+  task :disable do
+    on roles(:app) do |server|
+      sudo "/bin/systemctl disable actioncable_#{fetch(:full_app_name)}.service"
+    end
+  end
 end
 
 namespace :deploy do

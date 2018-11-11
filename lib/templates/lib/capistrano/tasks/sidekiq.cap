@@ -1,6 +1,6 @@
 namespace :sidekiq do
   %w[start stop restart status].map do |command|
-    desc "#{command} the Sidekiq server"
+    desc "#{command} the Sidekiq service"
     task command do
       on roles(:worker) do |server|
         sudo "/usr/sbin/service sidekiq_#{fetch(:full_app_name)} #{command}"
@@ -8,10 +8,18 @@ namespace :sidekiq do
     end
   end
   
-  desc "Register service in systemctl"
-  task :register do
-    on roles(:worker) do |server|
-      sudo "/bin/systemctl enable sidekiq_#{fetch(:full_app_name)}"
+  desc "Enable Sidekiq service"
+  task :enable do
+    on roles(:app) do |server|
+      smart_template "config/sidekiq.service", "config/sidekiq_#{fetch(:full_app_name)}.service"
+      sudo "/bin/systemctl enable #{shared_path}/config/sidekiq_#{fetch(:full_app_name)}.service"
+    end
+  end
+  
+  desc "Disable Sidekiq service"
+  task :disable do
+    on roles(:app) do |server|
+      sudo "/bin/systemctl disable sidekiq_#{fetch(:full_app_name)}.service"
     end
   end
 end
