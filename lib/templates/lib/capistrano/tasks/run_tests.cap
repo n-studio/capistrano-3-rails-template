@@ -4,13 +4,21 @@ namespace :deploy do
     test_log = "log/capistrano.test.log"
     tests = fetch(:tests)
     tests.each do |test|
+      if test == 'all'
+        cmd = "rails test"
+      elsif test =~ /\.rb$/
+        cmd = "rails test test/#{test}"
+      else
+        cmd = "rails test:#{test}"
+      end
+      start_time = Time.now
       puts "--> Running tests: '#{test}', please wait ..."
-      unless system "bundle exec rspec #{test} > #{test_log} 2>&1"
+      unless system "bundle exec #{cmd} > #{test_log} 2>&1"
         puts "--> Tests: '#{test}' failed. Results in: #{test_log} and below:"
         system "cat #{test_log}"
         exit;
       end
-      puts "--> '#{test}' passed"
+      puts "--> '#{test}' passed in #{Time.now - start_time} seconds."
     end
     puts "--> All tests passed"
     system "rm #{test_log}"
