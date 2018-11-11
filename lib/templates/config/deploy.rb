@@ -34,9 +34,6 @@ set :format_options, truncate: false
 # Default value for :pty is false
 # set :pty, true
 
-# Default value for :format is :pretty
-# set :format, :pretty
-
 # Default value for :linked_files is []
 set :linked_files, %w{config/database.yml .rbenv-vars}
 
