@@ -93,11 +93,9 @@ set(:symlinks, [
 
 namespace :deploy do
   # make sure we're deploying what we think we're deploying
-  before :deploy, "deploy:check_revision"
+  before :deploy, 'deploy:check_revision'
   # only allow a deploy with passing tests to deployed
-  before :deploy, "deploy:run_tests"
-  # compile assets locally then rsync
-  after 'deploy:symlink:shared', 'deploy:compile_assets_locally'
+  before :deploy, 'deploy:run_tests'
   after :finishing, 'deploy:cleanup'
 
   # remove the default nginx configuration as it will tend
@@ -111,6 +109,9 @@ namespace :deploy do
   # As of Capistrano 3.1, the `deploy:restart` task is not called
   # automatically.
   after 'deploy:publishing', 'deploy:restart'
+  
+  # compile assets locally instead of remotely, don't forget to disable 'capistrano/rails/assets' in Capfile
+  # after 'deploy:symlink:shared', 'deploy:compile_assets_locally'
 end
 
 # for the first deploy, call:
