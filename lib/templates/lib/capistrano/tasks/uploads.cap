@@ -1,0 +1,92 @@
+namespace :uploads do
+  desc 'Backup Uploads'
+  task :backup do
+    on roles(:app) do |server|
+      backup_path = "#{fetch(:deploy_to)}/backups"
+      execute :mkdir, "-p #{backup_path}"
+      basename = 'uploads'
+      
+      filename = "#{basename}_#{fetch(:application)}_#{fetch(:stage)}_#{Time.now.strftime '%Y-%m-%d_%H-%M-%S'}.tar.bz2"
+      info "We will backup to file: #{backup_path}/#{filename}"
+   
+      execute "cd #{shared_path}/public/uploads; tar cjvf #{backup_path}/#{filename} ."
+     
+      if ARGV[2] == "--download"
+        run_locally do
+          execute "scp #{server.user}@#{server.hostname}:#{backup_path}/#{filename} ./backups"
+        end
+      end
+    end
+  end
+  
+  desc 'Load Uploads Backups'
+  task :load_backup do
+    on roles(:app) do |server|
+      run_locally do
+        basename = 'uploads'
+        backups = capture("ls -t backups/#{basename}*.tar.bz2 2> /dev/null;echo").split
+        
+        info "No backup found" and break if backups.empty?
+        
+        backups.each_with_index do |backup, index|
+          info "* #{index}: #{backup}"
+        end
+        
+        ask :index, "Select index of backup to load (0)"
+        set :index, "0" if fetch(:index).empty?
+        
+        if !backups.empty? && backups[fetch(:index).to_i]
+          tarfile = backups[fetch(:index).to_i]
+          execute "scp #{tarfile} #{server.user}@#{server.hostname}:#{fetch(:deploy_to)}/#{tarfile}"
+        end
+      end
+    end
+  end
+  
+  desc 'Restore Uploads'
+  task :restore do
+    on roles(:app) do |server|
+      within "#{shared_path}/public" do
+        backup_path = "#{fetch(:deploy_to)}/backups"
+        execute :mkdir, "-p #{backup_path}"
+        basename = 'uploads'
+  
+        backups = capture("ls -t #{backup_path}/#{basename}*.tar.bz2 2> /dev/null;echo").split
+        
+        info "No backup found" and break if backups.empty?
+        
+        backups.each_with_index do |backup, index|
+          info "* #{index}: #{backup}"
+        end
+  
+        ask :index, "Select index of backup to restore (0)"
+        set :index, "0" if fetch(:index).empty?
+  
+        if !backups.empty? && backups[fetch(:index).to_i]
+          tarfile = backups[fetch(:index).to_i]
+          invoke "deploy:stop"
+          execute :rm, "-rf #{shared_path}/public/uploads/*"
+          execute :mkdir, "-p #{shared_path}/public/uploads"
+          execute "tar xvjf #{tarfile} -C #{shared_path}/public/uploads"
+          invoke "deploy:start"
+        end
+      end
+    end
+  end
+  
+  desc 'Clean old Uploads Backups'
+  task :clean do
+    on roles(:app) do |server|
+      max_keep = fetch(:keep_uploads_backups, 30).to_i
+      basename = 'uploads'
+      backup_files = capture("ls -t #{backup_path}/#{basename}*").split.reverse
+      if max_keep >= backup_files.length
+        info "No old uploads backups to clean up"
+      else
+        info "Keeping #{max_keep} of #{backup_files.length} uploads backups"
+        delete_backups = (backup_files - backup_files.last(max_keep)).join(" ")
+        execute :rm, "-rf #{delete_backups}"
+      end
+    end
+  end
+end

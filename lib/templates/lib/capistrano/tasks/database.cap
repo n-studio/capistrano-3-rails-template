@@ -11,12 +11,42 @@ namespace :db do
         execute :mkdir, "-p #{backup_path}"
         basename = 'database'
       
-        filename = "\"#{basename}_#{fetch(:stage)}_\"$DB_NAME\"_#{Time.now.strftime '%Y-%m-%d_%H-%M-%S'}.sql.bz2\""
-        execute "source #{current_path}/.rbenv-vars && echo \"We will backup to file: #{backup_path}/\"#{filename}"
+        filename = "#{basename}_#{fetch(:application)}_#{fetch(:stage)}_#{Time.now.strftime '%Y-%m-%d_%H-%M-%S'}.sql.bz2"
+        execute "source #{current_path}/.rbenv-vars && echo \"We will backup to file: #{backup_path}/#{filename}\""
       
         execute "source #{current_path}/.rbenv-vars && cd #{current_path} && pg_dump -U $DB_USERNAME $DB_NAME | bzip2 -9 > #{backup_path}/#{filename}"
           
         purge_old_backups "#{basename}", "#{backup_path}"
+        
+        if ARGV[2] == "--download"
+          run_locally do
+            execute "scp #{host.user}@#{host.hostname}:#{backup_path}/#{filename} ./backups"
+          end
+        end
+      end
+    end
+  end
+  
+  desc 'Load Database Backups'
+  task :load_backup do
+    on roles(:app) do |server|
+      run_locally do
+        basename = 'database'
+        backups = capture("ls -t backups/#{basename}*.sql.bz2 2> /dev/null;echo").split
+        
+        info "No backup found" and break if backups.empty?
+        
+        backups.each_with_index do |backup, index|
+          info "* #{index}: #{backup}"
+        end
+        
+        ask :index, "Select index of database to load (0)"
+        set :index, "0" if fetch(:index).empty?
+        
+        if !backups.empty? && backups[fetch(:index).to_i]
+          tarfile = backups[fetch(:index).to_i]
+          execute "scp #{tarfile} #{server.user}@#{server.hostname}:#{fetch(:deploy_to)}/#{tarfile}"
+        end
       end
     end
   end
@@ -28,7 +58,9 @@ namespace :db do
       execute :mkdir, "-p #{backup_path}"
       basename = 'database'
     
-      backups = capture("ls -t #{backup_path}/#{basename}*.sql.bz2").split
+      backups = capture("ls -t #{backup_path}/#{basename}*.sql.bz2 2> /dev/null;echo").split
+      
+      info "No backup found" and break if backups.empty?
       
       backups.each_with_index do |backup, index|
         info "* #{index}: #{backup}"
