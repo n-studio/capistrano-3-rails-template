@@ -1,5 +1,5 @@
 namespace :uploads do
-  desc 'Backup Uploads'
+  desc 'Backup Uploads (-- --download to make a local copy)'
   task :backup do
     on roles(:app) do |server|
       backup_path = "#{fetch(:deploy_to)}/backups"
@@ -13,7 +13,8 @@ namespace :uploads do
      
       if ARGV[2] == "--download"
         run_locally do
-          execute "scp #{server.user}@#{server.hostname}:#{backup_path}/#{filename} ./backups"
+          execute :mkdir, "-p ./backups"
+          execute "scp #{server.user}@#{server.hostname}:#{backup_path}/#{filename} ./backups/#{filename}"
         end
       end
     end
