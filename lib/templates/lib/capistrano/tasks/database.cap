@@ -3,7 +3,7 @@ before "deploy:updating", "db:backup"
 # inspired by http://www.railsfever.com/blogs/automatic-database-backups-with-capistrano-3
 
 namespace :db do
-  desc "Backup the database"
+  desc "Backup the database (-- --download to make a local copy)"
   task :backup do
     unless fetch(:first_deploy) == true
       on roles(:db) do |host|
@@ -20,7 +20,8 @@ namespace :db do
         
         if ARGV[2] == "--download"
           run_locally do
-            execute "scp #{host.user}@#{host.hostname}:#{backup_path}/#{filename} ./backups"
+            execute :mkdir, "-p ./backups"
+            execute "scp #{host.user}@#{host.hostname}:#{backup_path}/#{filename} ./backups/#{filename}"
           end
         end
       end
