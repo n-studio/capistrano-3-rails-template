@@ -7,6 +7,8 @@ namespace :before_deploy do
       puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/sbin/service nginx start,/usr/sbin/service nginx stop,/usr/sbin/service nginx restart,/usr/sbin/service nginx reload,/usr/sbin/service nginx status"
       # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/sbin/service actioncable_#{fetch(:full_app_name)} start,/usr/sbin/service actioncable_#{fetch(:full_app_name)} stop,/usr/sbin/service actioncable_#{fetch(:full_app_name)} restart,/bin/systemctl enable #{shared_path}/config/actioncable_#{fetch(:full_app_name)}.service,/bin/systemctl disable actioncable_#{fetch(:full_app_name)}.service"
       # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/sbin/service sidekiq_#{fetch(:full_app_name)} start,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} stop,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} restart,/usr/sbin/service sidekiq_#{fetch(:full_app_name)} status,/bin/systemctl enable #{shared_path}/config/sidekiq_#{fetch(:full_app_name)}.service,/bin/systemctl disable sidekiq_#{fetch(:full_app_name)}.service"
+      # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/bin/mv /tmp/monit.conf /etc/monit/conf.d/sidekiq_#{fetch(:full_app_name)}.conf"
+      # puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/usr/bin/monit reload,/usr/bin/monit monitor sidekiq_#{fetch(:full_app_name)}_[0-9]"
     
       symlinks.each do |symlink|
         puts "#{fetch(:deploy_user)} ALL=NOPASSWD:/bin/ln -nfs #{shared_path}/config/#{symlink[:source]} #{sub_strings(symlink[:link])}"
